@@ -87,15 +87,32 @@ function currentSender() {
 
 function showMessage(message) {
 	const item = document.createElement('li');
-	const sender = document.createElement('span');
-	sender.className = 'sender';
-	sender.textContent = `${message.sender} : `;
-	item.append(sender, message.content); // une chaîne ajoutée par append() reste du texte : pas d'injection HTML
+	item.className = 'message-wrapper';
+
 	if (message.sender === currentSender()) {
-		item.classList.add('mine'); // nos propres messages, renvoyés par le serveur, en bleu
+		item.classList.add('mine');
+	} else {
+		item.classList.add('other');
 	}
+
+	const senderName = document.createElement('div');
+	senderName.className = 'sender-name';
+	senderName.textContent = message.sender;
+
+	const bubble = document.createElement('div');
+	bubble.className = 'message-bubble';
+	bubble.textContent = message.content;
+
+	item.append(senderName, bubble);
 	messagesList.append(item);
-	messagesList.scrollTop = messagesList.scrollHeight; // défile jusqu'au dernier message
+	
+	// Utilisation du conteneur parent pour scroller (car ul prend la taille du parent)
+	const chatBody = document.getElementById('chatBody');
+	if(chatBody) {
+		chatBody.scrollTop = chatBody.scrollHeight;
+	} else {
+		messagesList.scrollTop = messagesList.scrollHeight;
+	}
 }
 
 function setConnected(connected) {
@@ -104,8 +121,15 @@ function setConnected(connected) {
 	disconnectBtn.disabled = !connected;
 	messageInput.disabled = !connected;
 	sendBtn.disabled = !connected;
+	
 	statusLabel.textContent = connected ? 'Connecté' : 'Déconnecté';
-	statusLabel.className = connected ? 'status on' : 'status off';
+	statusLabel.className = connected ? 'status-text on' : 'status-text off';
+	
+	const statusDot = document.getElementById('statusDot');
+	if(statusDot) {
+		statusDot.className = connected ? 'status-dot on' : 'status-dot off';
+	}
+
 	if (connected) {
 		messageInput.focus();
 	}
