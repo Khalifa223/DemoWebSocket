@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Chat WebSocket</title>
+	<link rel="icon" href="data:,"> <!-- pas d'icône : évite une erreur 404 sur /favicon.ico -->
+	<style>
+		body { font-family: system-ui, sans-serif; background: #f5f5f7; color: #1d1d1f; margin: 0; }
+		main { max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+		section, form { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: 1rem; }
+		input { flex: 1; min-width: 10rem; padding: .5rem; border: 1px solid #ccc; border-radius: 6px; }
+		button { padding: .5rem 1rem; border: 0; border-radius: 6px; background: #0a66c2; color: #fff; cursor: pointer; }
+		button:disabled, input:disabled { opacity: .5; cursor: not-allowed; }
+		.status { font-weight: 600; }
+		.status.on { color: #1a7f37; }
+		.status.off { color: #b42318; }
+		#messages, #log { list-style: none; padding: .5rem; margin: 0; background: #fff; border: 1px solid #ddd;
+			border-radius: 6px; min-height: 8rem; }
+		#messages { max-height: 20rem; overflow-y: auto; }
+		#messages li { padding: .25rem 0; }
+		#messages li.mine { color: #0a66c2; }
+		.sender { font-weight: 600; }
+		#log { font-family: ui-monospace, monospace; font-size: .85rem; }
+	</style>
+</head>
+<body>
+<main>
+	<h1>Chat WebSocket</h1>
+
+	<!-- Connexion -->
+	<section>
+		<label for="sender">Pseudo</label>
+		<input id="sender" type="text" placeholder="Alice" autocomplete="off">
+		<button id="connectBtn" type="button">Se connecter</button>
+		<button id="disconnectBtn" type="button" disabled>Se déconnecter</button>
+		<span id="status" class="status off">Déconnecté</span>
+	</section>
+
+	<!-- Saisie d'un message -->
+	<form id="messageForm">
+		<input id="messageInput" type="text" placeholder="Votre message…" autocomplete="off" disabled>
+		<button id="sendBtn" type="submit" disabled>Envoyer</button>
+	</form>
+
+	<!-- Messages reçus via l'abonnement à /topic/messages -->
+	<h2>Messages</h2>
+	<ul id="messages"></ul>
+
+	<h2>Journal</h2>
+	<ul id="log"></ul>
+</main>
+
+<!-- 1. Client STOMP, fourni par la WebJar déclarée dans pom.xml (expose l'objet global StompJs) -->
+<script src="/webjars/stomp__stompjs/bundles/stomp.umd.min.js"></script>
+<!-- 2. Notre script : connexion et envoi -->
+<script src="/js/app.js"></script>
+</body>
+</html>
